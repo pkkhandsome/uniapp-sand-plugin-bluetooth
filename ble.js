@@ -5,7 +5,9 @@ class BLE {
     //订阅蓝牙可用性变更  dicovering属性好像没用
     static onBluetoothAdapterStateChange(callback) {
         _oble.onBluetoothAdapterStateChange({},(res)=>{
-            callback && callback(res);
+            if(res.status=='2500'){
+                callback && callback(res);
+            }
         });
     }
 
@@ -296,6 +298,9 @@ class BLE {
         _oble.getBluetoothDevices({},(res)=>{
             res.code = res.status;
             if(res.status=='2500') {
+                if(res.devices) {
+                    res.devices = JSON.parse(res.devices);
+                }
                 if(options && options.success) {
                     options.success(res);
                 }
