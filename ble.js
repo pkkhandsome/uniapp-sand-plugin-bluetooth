@@ -1,11 +1,13 @@
 const _oble = uni.requireNativePlugin('sand-plugin-bluetooth');
 
 class BLE {
+    //返回数据正常
+    static STATUS_OK="2500";
 
     //订阅蓝牙可用性变更  dicovering属性好像没用
     static onBluetoothAdapterStateChange(callback) {
         _oble.onBluetoothAdapterStateChange({},(res)=>{
-            if(res.status=='2500'){
+            if(res.status==BLE.STATUS_OK){
                 callback && callback(res);
             }
         });
@@ -13,7 +15,7 @@ class BLE {
 
     static onBluetoothDeviceFound(callback) {
         _oble.onBluetoothDeviceFound({},(res)=>{
-            if(res.status=='2500'){
+            if(res.status==BLE.STATUS_OK){
                 if(res.devices) {
                     res.devices = JSON.parse(res.devices);
                 }
@@ -24,7 +26,7 @@ class BLE {
 
     static onBLEConnectionStateChange(callback) {
         _oble.onBLEConnectionStateChange({},(res)=>{
-            if(res.status=='2500'){
+            if(res.status==BLE.STATUS_OK){
                 callback && callback(res);
             }
         });
@@ -32,8 +34,7 @@ class BLE {
 
     static onBLECharacteristicValueChange(callback) {
         _oble.onBLECharacteristicValueChange({},(res)=>{
-            if(res.status=='2500'){
-                res.value = Utils.hex2ab(res.value);
+            if(res.status==BLE.STATUS_OK){
                 callback && callback(res);
             }
         });
@@ -41,7 +42,7 @@ class BLE {
 
     static startBluetoothDevicesDiscovery(options) {
         _oble.startBluetoothDevicesDiscovery({},(res)=>{
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -54,7 +55,7 @@ class BLE {
 
     static stopBluetoothDevicesDiscovery(options) {
         _oble.stopBluetoothDevicesDiscovery({},(res)=>{
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -69,7 +70,7 @@ class BLE {
         _oble.closeBLEConnection({
             deviceId : options.deviceId,
         },(res)=>{
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -86,7 +87,7 @@ class BLE {
             mtu : options.mtu,
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -106,7 +107,7 @@ class BLE {
             deviceId : options.deviceId,
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -126,7 +127,7 @@ class BLE {
             deviceId : options.deviceId
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -146,7 +147,7 @@ class BLE {
             deviceId : options.deviceId
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 res.services = JSON.parse(res.services);
                 if(options && options.success) {
                     options.success(res);
@@ -168,7 +169,7 @@ class BLE {
             serviceId : options.serviceId
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 res.characteristics = JSON.parse(res.characteristics);
                 if(options && options.success) {
                     options.success(res);
@@ -189,7 +190,7 @@ class BLE {
             deviceId : options.deviceId
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -211,7 +212,7 @@ class BLE {
             characteristicId : options.characteristicId
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -233,7 +234,7 @@ class BLE {
             characteristicId : options.characteristicId
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -249,15 +250,14 @@ class BLE {
     }
 
     static writeBLECharacteristicValue(options) {
-        let myValue = Utils.ab2hex(options.value);
         _oble.writeBLECharacteristicValue({
             deviceId : options.deviceId,
             serviceId : options.serviceId,
             characteristicId : options.characteristicId,
-            value : myValue
+            value : options.value
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -279,7 +279,7 @@ class BLE {
             characteristicId : options.characteristicId
         },(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -297,7 +297,7 @@ class BLE {
     static getBluetoothDevices(options) {
         _oble.getBluetoothDevices({},(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(res.devices) {
                     res.devices = JSON.parse(res.devices);
                 }
@@ -318,7 +318,7 @@ class BLE {
     static getBluetoothAdapterState(options) {
         _oble.getBluetoothAdapterState({},(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -336,7 +336,7 @@ class BLE {
     static openBluetoothAdapter(options) {
         _oble.openBluetoothAdapter({},(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
@@ -354,7 +354,7 @@ class BLE {
     static closeBluetoothAdapter(options) {
         _oble.closeBluetoothAdapter({},(res)=>{
             res.code = res.status;
-            if(res.status=='2500') {
+            if(res.status==BLE.STATUS_OK) {
                 if(options && options.success) {
                     options.success(res);
                 }
